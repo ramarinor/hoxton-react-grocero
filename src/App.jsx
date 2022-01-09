@@ -81,7 +81,8 @@ function App() {
   }
 
   function addToCart(item) {
-    const itemFound = cart.find((cartItem) => item.id === cartItem.id);
+    const updatedCart = [...cart];
+    const itemFound = updatedCart.find((cartItem) => item.id === cartItem.id);
     if (itemFound === undefined) {
       const newCartItem = {
         id: item.id,
@@ -89,20 +90,24 @@ function App() {
         price: item.price,
         quantity: 1,
       };
-      const updatedCart = [...cart, newCartItem];
-      setCart(updatedCart);
+      updatedCart.push(newCartItem);
     } else {
-      increaseQuantity(item);
+      itemFound.quantity++;
     }
+    setCart(updatedCart);
   }
-
-  function increaseQuantity(item) {
-    const updatedCart = cart.map((cartItem) => {
-      if (cartItem.id === item.id) {
-        cartItem.quantity++;
-      }
-      return cartItem;
+  function removeFromCart(item) {
+    let updatedCart = [...cart];
+    const itemFound = updatedCart.find((cartItem) => {
+      return cartItem.id === item.id;
     });
+    itemFound.quantity--;
+    if (itemFound.quantity <= 0) {
+      updatedCart = updatedCart.filter(
+        (cartItem) => cartItem.id !== itemFound.id
+      );
+    }
+
     setCart(updatedCart);
   }
 
@@ -142,11 +147,23 @@ function App() {
                   alt={cartItem.name}
                 />
                 <p>{cartItem.name}</p>
-                <button className="quantity-btn remove-btn center">-</button>
+                <button
+                  className="quantity-btn remove-btn center"
+                  onClick={() => {
+                    removeFromCart(cartItem);
+                  }}
+                >
+                  -
+                </button>
                 <span className="quantity-text center">
                   {cartItem.quantity}
                 </span>
-                <button className="quantity-btn add-btn center">+</button>
+                <button
+                  className="quantity-btn add-btn center"
+                  onClick={() => addToCart(cartItem)}
+                >
+                  +
+                </button>
               </li>
             ))}
           </ul>

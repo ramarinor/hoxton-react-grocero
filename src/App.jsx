@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "./App.css";
+import Cart from "./Cart/Cart";
+import Store from "./Store/Store";
 
 function App() {
   const [storeItems, setStoreItems] = useState([
@@ -166,92 +168,20 @@ function App() {
 
   return (
     <div className="App">
-      <header id="store">
-        <h1>Grocero</h1>
-        <form className="store--form">
-          <label>
-            Choose a filter:
-            <select name="filter" onChange={(e) => setFilter(e.target.value)}>
-              <option value="all">All</option>
-              <option value="fruit">Fruits</option>
-              <option value="vegetable">Vegetables</option>
-            </select>
-          </label>
-          <label>
-            Sort by:
-            <select name="sort" onChange={(e) => setSortBy(e.target.value)}>
-              <option value="default">Default</option>
-              <option value="alphabetAsc">Alphabetically(asc)</option>
-              <option value="alphabetDesc">Alphabetically(desc)</option>
-              <option value="priceAsc">Price(asc)</option>
-              <option value="priceDesc">Price(desc)</option>
-            </select>
-          </label>
-        </form>
-        <ul className="item-list store--item-list">
-          {storeItemsToDisplay.map((storeItem) => (
-            <li key={storeItem.id}>
-              <div className="store--item-icon">
-                <img
-                  src={`assets/icons/${addZeros(storeItem.id)}-${
-                    storeItem.name
-                  }.svg`}
-                  alt={storeItem.name}
-                />
-              </div>
-              <button onClick={() => addToCart(storeItem)}>Add to cart</button>
-            </li>
-          ))}
-        </ul>
-      </header>
-
-      <main id="cart">
-        <h2>Your Cart</h2>
-
-        <div className="cart--item-list-container">
-          <ul className="item-list cart--item-list">
-            {cart.map((cartItem) => (
-              <li key={cartItem.id}>
-                <img
-                  className="cart--item-icon"
-                  src={`assets/icons/${addZeros(cartItem.id)}-${
-                    cartItem.name
-                  }.svg`}
-                  alt={cartItem.name}
-                />
-                <p>{cartItem.name}</p>
-                <button
-                  className="quantity-btn remove-btn center"
-                  onClick={() => {
-                    removeFromCart(cartItem);
-                  }}
-                >
-                  -
-                </button>
-                <span className="quantity-text center">
-                  {cartItem.quantity}
-                </span>
-                <button
-                  className="quantity-btn add-btn center"
-                  onClick={() => addToCart(cartItem)}
-                >
-                  +
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="total-section">
-          <div>
-            <h3>Total</h3>
-          </div>
-
-          <div>
-            <span className="total-number">£{calculateTotal()}</span>
-          </div>
-        </div>
-      </main>
+      <Store
+        storeItemsToDisplay={storeItemsToDisplay}
+        setFilter={setFilter}
+        setSortBy={setSortBy}
+        addZeros={addZeros}
+        addToCart={addToCart}
+      />
+      <Cart
+        cart={cart}
+        addZeros={addZeros}
+        removeFromCart={removeFromCart}
+        addToCart={addToCart}
+        calculateTotal={calculateTotal}
+      />
     </div>
   );
 }

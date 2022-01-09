@@ -66,6 +66,7 @@ function App() {
   ]);
   const [cart, setCart] = useState([]);
   const [filter, setFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("default");
 
   function calculateTotal() {
     let total = 0;
@@ -123,6 +124,46 @@ function App() {
   }
   const storeItemsToDisplay = getSelecetedStoreItems();
 
+  switch (sortBy) {
+    case "alphabetAsc":
+      storeItemsToDisplay.sort(function (firstItem, secondItem) {
+        if (firstItem.name > secondItem.name) {
+          return 1;
+        }
+        if (firstItem.name < secondItem.name) {
+          return -1;
+        }
+        return 0;
+      });
+      break;
+    case "alphabetDesc":
+      storeItemsToDisplay.sort(function (firstItem, secondItem) {
+        if (firstItem.name > secondItem.name) {
+          return -1;
+        }
+        if (firstItem.name < secondItem.name) {
+          return 1;
+        }
+        return 0;
+      });
+      break;
+    case "priceAsc":
+      storeItemsToDisplay.sort(function (firstItem, secondItem) {
+        return firstItem.price - secondItem.price;
+      });
+      break;
+    case "priceDesc":
+      storeItemsToDisplay.sort(function (firstItem, secondItem) {
+        return secondItem.price - firstItem.price;
+      });
+      break;
+    default:
+      storeItemsToDisplay.sort(function (firstItem, secondItem) {
+        return firstItem.id - secondItem.id;
+      });
+      break;
+  }
+
   return (
     <div className="App">
       <header id="store">
@@ -131,15 +172,15 @@ function App() {
           <label>
             Choose a filter:
             <select name="filter" onChange={(e) => setFilter(e.target.value)}>
-              <option defaultValue="all">All</option>
+              <option value="all">All</option>
               <option value="fruit">Fruits</option>
               <option value="vegetable">Vegetables</option>
             </select>
           </label>
           <label>
             Sort by:
-            <select name="sort">
-              <option defaultValue="default">Default</option>
+            <select name="sort" onChange={(e) => setSortBy(e.target.value)}>
+              <option value="default">Default</option>
               <option value="alphabetAsc">Alphabetically(asc)</option>
               <option value="alphabetDesc">Alphabetically(desc)</option>
               <option value="priceAsc">Price(asc)</option>

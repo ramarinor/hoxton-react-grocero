@@ -64,22 +64,7 @@ function App() {
       type: "vegetable",
     },
   ]);
-  const [cart, setCart] = useState([
-    {
-      id: 1,
-      name: "beetroot",
-      price: 0.4,
-      type: "vegetable",
-      quantity: 3,
-    },
-    {
-      id: 2,
-      name: "carrot",
-      price: 0.3,
-      type: "vegetable",
-      quantity: 2,
-    },
-  ]);
+  const [cart, setCart] = useState([]);
 
   function calculateTotal() {
     let total = 0;
@@ -95,13 +80,39 @@ function App() {
     return pad.substring(0, pad.length - str.length) + str;
   }
 
+  function addToCart(item) {
+    const itemFound = cart.find((cartItem) => item.id === cartItem.id);
+    if (itemFound === undefined) {
+      const newCartItem = {
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: 1,
+      };
+      const updatedCart = [...cart, newCartItem];
+      setCart(updatedCart);
+    } else {
+      increaseQuantity(item);
+    }
+  }
+
+  function increaseQuantity(item) {
+    const updatedCart = cart.map((cartItem) => {
+      if (cartItem.id === item.id) {
+        cartItem.quantity++;
+      }
+      return cartItem;
+    });
+    setCart(updatedCart);
+  }
+
   return (
     <div className="App">
       <header id="store">
         <h1>Grocero</h1>
         <ul className="item-list store--item-list">
           {storeItems.map((storeItem) => (
-            <li>
+            <li key={storeItem.id}>
               <div className="store--item-icon">
                 <img
                   src={`assets/icons/${addZeros(storeItem.id)}-${
@@ -110,7 +121,7 @@ function App() {
                   alt={storeItem.name}
                 />
               </div>
-              <button>Add to cart</button>
+              <button onClick={() => addToCart(storeItem)}>Add to cart</button>
             </li>
           ))}
         </ul>
@@ -122,7 +133,7 @@ function App() {
         <div className="cart--item-list-container">
           <ul className="item-list cart--item-list">
             {cart.map((cartItem) => (
-              <li>
+              <li key={cartItem.id}>
                 <img
                   className="cart--item-icon"
                   src={`assets/icons/${addZeros(cartItem.id)}-${

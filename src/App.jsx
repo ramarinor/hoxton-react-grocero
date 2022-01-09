@@ -65,6 +65,7 @@ function App() {
     },
   ]);
   const [cart, setCart] = useState([]);
+  const [filter, setFilter] = useState("all");
 
   function calculateTotal() {
     let total = 0;
@@ -72,6 +73,16 @@ function App() {
       total = total + item.price * item.quantity;
     }
     return total.toFixed(2);
+  }
+
+  function getSelecetedStoreItems() {
+    if (filter === "all") {
+      return storeItems;
+    } else {
+      return storeItems.filter(function (storeItem) {
+        return storeItem.type === filter;
+      });
+    }
   }
 
   function addZeros(number) {
@@ -110,13 +121,34 @@ function App() {
 
     setCart(updatedCart);
   }
+  const storeItemsToDisplay = getSelecetedStoreItems();
 
   return (
     <div className="App">
       <header id="store">
         <h1>Grocero</h1>
+        <form className="store--form">
+          <label>
+            Choose a filter:
+            <select name="filter" onChange={(e) => setFilter(e.target.value)}>
+              <option defaultValue="all">All</option>
+              <option value="fruit">Fruits</option>
+              <option value="vegetable">Vegetables</option>
+            </select>
+          </label>
+          <label>
+            Sort by:
+            <select name="sort">
+              <option defaultValue="default">Default</option>
+              <option value="alphabetAsc">Alphabetically(asc)</option>
+              <option value="alphabetDesc">Alphabetically(desc)</option>
+              <option value="priceAsc">Price(asc)</option>
+              <option value="priceDesc">Price(desc)</option>
+            </select>
+          </label>
+        </form>
         <ul className="item-list store--item-list">
-          {storeItems.map((storeItem) => (
+          {storeItemsToDisplay.map((storeItem) => (
             <li key={storeItem.id}>
               <div className="store--item-icon">
                 <img

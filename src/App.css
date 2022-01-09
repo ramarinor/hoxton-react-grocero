@@ -87,6 +87,11 @@ button {
   width: 125px;
   height: 125px;
 }
+.store--form {
+  color: white;
+  display: grid;
+  justify-content: center;
+}
 
 @media only screen and (max-width: 600px) {
   .store--item-list {
